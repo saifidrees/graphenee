@@ -104,6 +104,7 @@
 		<module>gx-jbpm-embedded</module>
 		<module>gx-sms</module>
 		<module>gx-sms-vaadin</module>
+		<module>gx-zeromq</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -347,11 +348,6 @@
 				<version>3.6.1</version>
 			</dependency>
 			<dependency>
-				<groupId>org.zeromq</groupId>
-				<artifactId>jeromq</artifactId>
-				<version>0.4.3</version>
-			</dependency>
-			<dependency>
 				<groupId>io.graphenee</groupId>
 				<artifactId>gx-sms</artifactId>
 				<version>${project.version}</version>
@@ -365,6 +361,11 @@
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi</artifactId>
 				<version>3.17</version>
+			</dependency>
+			<dependency>
+				<groupId>io.graphenee</groupId>
+				<artifactId>gx-zeromq</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

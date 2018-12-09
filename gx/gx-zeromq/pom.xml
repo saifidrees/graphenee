@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.graphenee</groupId>
+    <artifactId>gx</artifactId>
+    <version>0.1.2-SNAPSHOT</version>
+  </parent>
+  <artifactId>gx-zeromq</artifactId>
+  <name>Graphenee ZeroMQ</name>
+  <description>ZeroMQ convenient libarary for Graphenee</description>
+  <properties>
+  	<version.zeromq>0.4.3</version.zeromq>
+  </properties>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.zeromq</groupId>
+  		<artifactId>jeromq</artifactId>
+  		<version>${version.zeromq}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>io.graphenee</groupId>
+  		<artifactId>gx-core</artifactId>
+  	</dependency>
+  </dependencies>
+</project>
