@@ -37,15 +37,13 @@ public class GxZContext {
 	}
 
 	public GxZClient createClient() {
-		return createClient(5000, 5000, 5000);
+		return createClient(5000);
 	}
 
-	public GxZClient createClient(int reconnectIntervalInMillis, int sendTimeoutInMillis, int receiveTimeoutInMillis) {
+	public GxZClient createClient(int reconnectIntervalInMillis) {
 		Socket socket = context.createSocket(ZMQ.REQ);
 		socket.setReconnectIVL(reconnectIntervalInMillis);
 		socket.connect(config.getClientAddress());
-		socket.setSendTimeOut(sendTimeoutInMillis);
-		socket.setReceiveTimeOut(receiveTimeoutInMillis);
 		socket.setReqRelaxed(true);
 		socket.setReqCorrelate(true);
 		GxZClient client = new GxZClient(socket);
@@ -67,15 +65,13 @@ public class GxZContext {
 	}
 
 	public GxZPublisher createPublisher() {
-		return createPublisher(5000, 5000, 5000);
+		return createPublisher(5000);
 	}
 
-	public GxZPublisher createPublisher(int reconnectIntervalInMillis, int sendTimeoutInMillis, int receiveTimeoutInMillis) {
+	public GxZPublisher createPublisher(int reconnectIntervalInMillis) {
 		Socket socket = context.createSocket(ZMQ.PUSH);
 		socket.setReconnectIVL(reconnectIntervalInMillis);
 		socket.connect(config.getPublisherAddress());
-		socket.setSendTimeOut(sendTimeoutInMillis);
-		socket.setReceiveTimeOut(receiveTimeoutInMillis);
 		GxZPublisher publisher = new GxZPublisher(socket);
 		publishers.add(publisher);
 		return publisher;
