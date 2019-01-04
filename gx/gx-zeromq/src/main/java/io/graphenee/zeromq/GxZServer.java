@@ -1,5 +1,7 @@
 package io.graphenee.zeromq;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -8,18 +10,20 @@ import org.slf4j.LoggerFactory;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Socket;
 
-import zmq.ZError;
-
 public class GxZServer {
 
 	private static final Logger L = LoggerFactory.getLogger(GxZServer.class);
 
-	private Socket socket;
 	private GxZRequestProcessor processor;
-	private ExecutorService executorService;
+	private List<ExecutorService> executorServices = new ArrayList<>();
 
-	GxZServer(Socket socket) {
-		this.socket = socket;
+	private GxZContext ctx;
+	private int totalServerCount;
+	private List<Socket> sockets = new ArrayList<>();
+
+	public GxZServer(GxZContext gxZContext, int totalServerCount) {
+		this.ctx = gxZContext;
+		this.totalServerCount = totalServerCount;
 	}
 
 	public void setRequestProcessor(GxZRequestProcessor processor) {
@@ -27,32 +31,42 @@ public class GxZServer {
 	}
 
 	public void start() {
-		executorService = Executors.newSingleThreadExecutor();
-		executorService.execute(() -> {
-			System.err.println("GxZServer is listening...");
-			while (true) {
-				try {
-					byte[] data = socket.recv();
-					if (socket.errno() == ZError.EAGAIN)
-						continue;
-					if (processor != null) {
-						byte[] response = processor.onRequest(data);
-						socket.send(response, ZMQ.DONTWAIT);
-					} else {
-						socket.send("");
+		for (int i = 0; i < totalServerCount; ++i) {
+			ExecutorService executorService = Executors.newSingleThreadExecutor();
+			executorService.execute(() -> {
+				L.info("Server is connecting to gx-zeromq proxy...");
+				Socket socket = ctx.getContext().createSocket(ZMQ.REP);
+				sockets.add(socket);
+				socket.setReconnectIVL(5000);
+				socket.connect(ctx.getConfig().getServerAddress());
+				L.info("Listening...");
+				while (!Thread.currentThread().isInterrupted()) {
+					try {
+						byte[] data = socket.recv();
+						L.debug("Data received, now processing...");
+						if (processor != null && data != null) {
+							byte[] response = processor.onRequest(data);
+							socket.send(response);
+						} else {
+							socket.send("");
+						}
+					} catch (Exception ex) {
+						L.warn(ex.getMessage(), ex);
 					}
-				} catch (Exception ex) {
-					L.warn(ex.getMessage(), ex);
 				}
-			}
-		});
+			});
+			executorServices.add(executorService);
+		}
 	}
 
 	void destroy() {
-		if (executorService != null)
+		executorServices.forEach(executorService -> {
 			executorService.shutdownNow();
-		socket.setLinger(0);
-		socket.close();
+		});
+		sockets.forEach(socket -> {
+			socket.setLinger(0);
+			socket.close();
+		});
 	}
 
 }

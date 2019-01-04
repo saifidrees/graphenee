@@ -6,7 +6,7 @@ public class GxZSendException extends Exception {
 	private int errorCode;
 
 	public GxZSendException(int errorCode, String message) {
-		super();
+		super(message);
 		this.errorCode = errorCode;
 	}
 
