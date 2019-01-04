@@ -1347,6 +1347,30 @@ public class GxDataServiceImpl implements GxDataService {
 	}
 
 	@Override
+	public GxEmailTemplateBean findEmailTemplateByTemplateCodeActive(String templateCode) {
+		GxNamespaceBean namespace = findNamespace(GxNamespaceBean.SYSTEM);
+		GxEmailTemplate emailTemplate = null;
+		if (namespace != null) {
+			emailTemplate = emailTemplateRepository.findOneByTemplateCodeAndGxNamespaceOidAndIsActive(templateCode, namespace.getOid(), true);
+		} else {
+			emailTemplate = emailTemplateRepository.findOneByTemplateCodeAndIsActive(templateCode, true);
+		}
+		if (emailTemplate != null) {
+			return makeEmailTemplateBean(emailTemplate, namespace);
+		}
+		return null;
+	}
+
+	@Override
+	public GxEmailTemplateBean findEmailTemplateByTemplateCodeAndNamespaceActive(String templateCode, GxNamespaceBean namespace) {
+		GxEmailTemplate emailTemplate = emailTemplateRepository.findOneByTemplateCodeAndGxNamespaceOidAndIsActive(templateCode, namespace.getOid(), true);
+		if (emailTemplate != null) {
+			return makeEmailTemplateBean(emailTemplate, namespace);
+		}
+		return null;
+	}
+
+	@Override
 	public List<GxEmailTemplateBean> findEmailTemplate() {
 		List<GxEmailTemplateBean> beans = new ArrayList<>();
 		beans.addAll(emailTemplateRepository.findAll(new Sort("templateName")).stream().map(template -> {
@@ -1586,6 +1610,12 @@ public class GxDataServiceImpl implements GxDataService {
 
 	public List<GxAuditLogBean> findAuditLogByAuditEntityAndOidAuditEntity(String auditEntity, Integer oidAuditEntity) {
 		List<GxAuditLog> entities = auditLogRepository.findAllByAuditEntityAndOidAuditEntityOrderByAuditDateDesc(auditEntity, oidAuditEntity);
+		return makeAuditLogBean(entities);
+	}
+
+	@Override
+	public List<GxAuditLogBean> findAuditLogByOidAuditEntity(Integer oidAuditEntity) {
+		List<GxAuditLog> entities = auditLogRepository.findAllByOidAuditEntity(oidAuditEntity);
 		return makeAuditLogBean(entities);
 	}
 
