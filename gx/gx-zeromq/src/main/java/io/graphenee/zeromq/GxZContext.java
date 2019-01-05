@@ -33,7 +33,7 @@ public class GxZContext {
 	}
 
 	public GxZClient createClient() {
-		return createClient(2, 2000);
+		return createClient(3, 5000);
 	}
 
 	public GxZClient createClient(int retriesLimit, int pollingTimeoutInMillis) {
