@@ -24,7 +24,42 @@ public class GxZClient {
 		this.pollingTimeoutInMillis = pollingTimeoutInMillis;
 	}
 
-	public void sendMessage(final byte[] message, final GxZSuccessCallback success, final GxZErrorCallback error) throws GxZSendException {
+	public byte[] sendMessage(final byte[] message) throws GxZSendException {
+		try {
+			socket = ctx.getContext().createSocket(ZMQ.REQ);
+			socket.setReconnectIVL(5000);
+			socket.connect(ctx.getConfig().getClientAddress());
+
+			socket.send(message);
+			ZMQ.Poller poller = ctx.getContext().createPoller(32);
+			poller.register(socket, ZMQ.Poller.POLLIN);
+			int i;
+			byte[] serverMessage = null;
+			for (i = 1; i <= retriesLimit; ++i) {
+				L.debug("Polling on gx-zeromq proxy");
+				int rc = poller.poll(pollingTimeoutInMillis);
+				L.debug("Data received " + rc);
+				if (poller.pollin(0)) {
+					serverMessage = socket.recv();
+					break;
+				} else {
+					// notification send
+				}
+			}
+			poller.unregister(socket);
+			poller.close();
+			destroy();
+
+			if (i > retriesLimit)
+				throw new GxZSendException(500, "Unable to send message to server, please make sure the server is online and connected to gx-zeromq proxy.");
+			else
+				return serverMessage;
+		} catch (Exception ex) {
+			throw new GxZSendException(-1, ex.getMessage());
+		}
+	}
+
+	public void sendMessageAsync(final byte[] message, final GxZSuccessCallback success, final GxZErrorCallback error) throws GxZSendException {
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
 				socket = ctx.getContext().createSocket(ZMQ.REQ);
@@ -45,7 +80,11 @@ public class GxZClient {
 							success.onSuccess(serverMessage);
 						break;
 					} else {
-						// notification send
+						if (i == 1) {
+							error.onError(500, "Trying to connect...");
+						} else {
+							error.onError(500, "Trying to connect... attepmt " + i);
+						}
 					}
 				}
 				poller.unregister(socket);
@@ -69,6 +108,7 @@ public class GxZClient {
 	void destroy() {
 		socket.setLinger(0);
 		socket.close();
+		L.debug("Socket destroyed");
 	}
 
 }
