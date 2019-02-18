@@ -52,6 +52,16 @@ public class GxZContext {
 		return server;
 	}
 
+	public GxZPublisher createPublisher() {
+		GxZPublisher publisher = new GxZPublisher(this);
+		return publisher;
+	}
+
+	public GxZSubscriber createSubscriber() {
+		GxZSubscriber subscriber = new GxZSubscriber(this);
+		return subscriber;
+	}
+
 	public GxBrokerConfiguration getConfig() {
 		return config;
 	}
