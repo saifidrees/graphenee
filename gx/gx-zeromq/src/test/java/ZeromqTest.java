@@ -12,7 +12,6 @@ import io.graphenee.zeromq.GxZServer;
 import io.graphenee.zeromq.GxZSubscriber;
 import io.graphenee.zeromq.GxZSuccessCallback;
 import io.graphenee.zeromq.exception.GxZRequestProcessingException;
-import io.graphenee.zeromq.exception.GxZSendException;
 
 public class ZeromqTest {
 
@@ -39,24 +38,19 @@ public class ZeromqTest {
 		server.start();
 
 		GxZClient client = context.createClient();
-		try {
-			client.sendMessageAsync("Hello World".getBytes(), new GxZSuccessCallback() {
+		client.sendMessageAsync("Hello World".getBytes(), new GxZSuccessCallback() {
 
-				@Override
-				public void onSuccess(byte[] serverMessage) {
-					System.err.println("Response: " + new String(serverMessage));
-				}
-			}, new GxZErrorCallback() {
+			@Override
+			public void onSuccess(byte[] serverMessage) {
+				System.err.println("Response: " + new String(serverMessage));
+			}
+		}, new GxZErrorCallback() {
 
-				@Override
-				public void onError(int errorCode, String errorMessage) {
-					System.err.println(errorMessage);
-				}
-			});
-		} catch (GxZSendException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			@Override
+			public void onError(int errorCode, String errorMessage) {
+				System.err.println(errorMessage);
+			}
+		});
 
 		try {
 			Thread.sleep(5000);
@@ -89,24 +83,19 @@ public class ZeromqTest {
 		s1.subscribe("farrukh");
 		s2.subscribe("ismail");
 
-		try {
-			publisher.publishAsync("farrukh", "This is for Farrukh".getBytes(), new GxZSuccessCallback() {
+		publisher.publishAsync("farrukh", "This is for Farrukh".getBytes(), new GxZSuccessCallback() {
 
-				@Override
-				public void onSuccess(byte[] serverMessage) {
-					System.err.println("Published!");
-				}
-			}, new GxZErrorCallback() {
+			@Override
+			public void onSuccess(byte[] serverMessage) {
+				System.err.println("Published!");
+			}
+		}, new GxZErrorCallback() {
 
-				@Override
-				public void onError(int errorCode, String errorMessage) {
-					System.err.println(errorMessage);
-				}
-			});
-		} catch (GxZSendException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			@Override
+			public void onError(int errorCode, String errorMessage) {
+				System.err.println(errorMessage);
+			}
+		});
 
 		try {
 			Thread.sleep(1000);

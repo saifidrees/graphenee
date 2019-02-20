@@ -33,7 +33,7 @@ public class GxZPublisher {
 		}
 	}
 
-	public void publishAsync(final String topic, final byte[] message, final GxZSuccessCallback success, final GxZErrorCallback error) throws GxZSendException {
+	public void publishAsync(final String topic, final byte[] message, final GxZSuccessCallback success, final GxZErrorCallback error) {
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
 				socket = ctx.getContext().createSocket(ZMQ.PUSH);

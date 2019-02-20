@@ -33,17 +33,16 @@ public class GxZServer {
 	public void start() {
 		for (int i = 0; i < totalServerCount; ++i) {
 			ExecutorService executorService = Executors.newSingleThreadExecutor();
+			final Integer count = i + 1;
 			executorService.execute(() -> {
-				L.info("Server is connecting to gx-zeromq proxy...");
 				Socket socket = ctx.getContext().createSocket(ZMQ.REP);
 				sockets.add(socket);
 				socket.setReconnectIVL(5000);
 				socket.connect(ctx.getConfig().getServerAddress());
-				L.info("Listening...");
+				L.warn("Server Thread-" + count + " listening on gx-zeromq-proxy backend on " + ctx.getConfig().getServerAddress());
 				while (!Thread.currentThread().isInterrupted()) {
 					try {
 						byte[] data = socket.recv();
-						L.debug("Data received, now processing...");
 						if (processor != null && data != null) {
 							byte[] response = processor.onRequest(data);
 							socket.send(response);

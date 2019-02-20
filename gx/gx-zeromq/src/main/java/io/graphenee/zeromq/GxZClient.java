@@ -36,9 +36,7 @@ public class GxZClient {
 			int i;
 			byte[] serverMessage = null;
 			for (i = 1; i <= retriesLimit; ++i) {
-				L.debug("Polling on gx-zeromq proxy");
-				int rc = poller.poll(pollingTimeoutInMillis);
-				L.debug("Data received " + rc);
+				poller.poll(pollingTimeoutInMillis);
 				if (poller.pollin(0)) {
 					serverMessage = socket.recv();
 					break;
@@ -51,7 +49,8 @@ public class GxZClient {
 			destroy();
 
 			if (i > retriesLimit)
-				throw new GxZSendException(500, "Unable to send message to server, please make sure the server is online and connected to gx-zeromq proxy.");
+				throw new GxZSendException(500,
+						"Failed to connect to gx-zeromq-proxy, make sure gx-zeromq-proxy is running with client port set to " + ctx.getConfig().getClientAddress());
 			else
 				return serverMessage;
 		} catch (Exception ex) {
@@ -59,7 +58,7 @@ public class GxZClient {
 		}
 	}
 
-	public void sendMessageAsync(final byte[] message, final GxZSuccessCallback success, final GxZErrorCallback error) throws GxZSendException {
+	public void sendMessageAsync(final byte[] message, final GxZSuccessCallback success, final GxZErrorCallback error) {
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
 				socket = ctx.getContext().createSocket(ZMQ.REQ);
@@ -71,9 +70,7 @@ public class GxZClient {
 				poller.register(socket, ZMQ.Poller.POLLIN);
 				int i;
 				for (i = 1; i <= retriesLimit; ++i) {
-					L.debug("Polling on gx-zeromq proxy");
-					int rc = poller.poll(pollingTimeoutInMillis);
-					L.debug("Data received " + rc);
+					poller.poll(pollingTimeoutInMillis);
 					if (poller.pollin(0)) {
 						byte[] serverMessage = socket.recv();
 						if (serverMessage != null && success != null)
@@ -81,9 +78,13 @@ public class GxZClient {
 						break;
 					} else {
 						if (i == 1) {
-							error.onError(500, "Trying to connect...");
+							String msg = "Trying to connect to gx-zeromq-proxy frontend on " + ctx.getConfig().getClientAddress() + "...";
+							L.warn(msg);
+							error.onError(500, msg);
 						} else {
-							error.onError(500, "Trying to connect... attepmt " + i);
+							String msg = "Trying to connect to gx-zeromq-proxy frontend on " + ctx.getConfig().getClientAddress() + "... attempt #" + i;
+							L.warn(msg);
+							error.onError(500, msg);
 						}
 					}
 				}
@@ -92,7 +93,7 @@ public class GxZClient {
 				destroy();
 
 				if (i > retriesLimit) {
-					error.onError(500, "Unable to send message to server, please make sure the server is online and connected to gx-zeromq proxy.");
+					error.onError(500, "Failed to connect to gx-zeromq-proxy, make sure gx-zeromq-proxy is running with frontend on " + ctx.getConfig().getClientAddress());
 				}
 
 			} catch (Exception ex) {
