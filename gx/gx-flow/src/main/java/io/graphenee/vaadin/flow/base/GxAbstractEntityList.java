@@ -1027,18 +1027,18 @@ public abstract class GxAbstractEntityList<T> extends VerticalLayout {
 	private Renderer<T> defaultRendererForProperty(String propertyName, PropertyDefinition<T, ?> propertyDefinition) {
 		Renderer<T> renderer = rendererForProperty(propertyName, propertyDefinition);
 		if (renderer == null) {
-			if (propertyName.matches("date.*|.*Date")) {
-				if (propertyDefinition.getType().getSuperclass().equals(Number.class)) {
-					renderer = new GxNumberToDateRenderer<>((ValueProvider<T, Number>) propertyDefinition.getGetter(), GxNumberToDateRenderer.GxDateResolution.Date);
-				} else if (renderer == null && propertyDefinition.getType().equals(Timestamp.class)) {
-					renderer = new GxDateRenderer<>((ValueProvider<T, Date>) propertyDefinition.getGetter(), GxDateRenderer.GxDateResolution.Date);
-				}
-			}
-			if (renderer == null && propertyName.matches("dateTime.*|.*DateTime")) {
+			if (propertyName.matches("dateTime.*|.*DateTime")) {
 				if (propertyDefinition.getType().getSuperclass().equals(Number.class)) {
 					renderer = new GxNumberToDateRenderer<>((ValueProvider<T, Number>) propertyDefinition.getGetter(), GxNumberToDateRenderer.GxDateResolution.DateTime);
 				} else if (renderer == null && propertyDefinition.getType().equals(Timestamp.class)) {
 					renderer = new GxDateRenderer<>((ValueProvider<T, Date>) propertyDefinition.getGetter(), GxDateRenderer.GxDateResolution.DateTime);
+				}
+			}
+			if (renderer == null && propertyName.matches("date.*|.*Date")) {
+				if (propertyDefinition.getType().getSuperclass().equals(Number.class)) {
+					renderer = new GxNumberToDateRenderer<>((ValueProvider<T, Number>) propertyDefinition.getGetter(), GxNumberToDateRenderer.GxDateResolution.Date);
+				} else if (renderer == null && propertyDefinition.getType().equals(Timestamp.class)) {
+					renderer = new GxDateRenderer<>((ValueProvider<T, Date>) propertyDefinition.getGetter(), GxDateRenderer.GxDateResolution.Date);
 				}
 			}
 			if (renderer == null && propertyDefinition.getType().equals(Timestamp.class)) {
