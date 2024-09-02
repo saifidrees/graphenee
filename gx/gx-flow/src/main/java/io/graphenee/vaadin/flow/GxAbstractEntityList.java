@@ -1253,7 +1253,10 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 		} else {
 			GxAbstractEntityForm<T> entityForm = cachedForm(entity);
 			if (entityForm != null) {
-				entityForm.show(entity, rootLayout);
+				if (shouldShowFormInDialog()) {
+					entityForm.show(entity);
+				} else
+					entityForm.show(entity, rootLayout);
 			}
 		}
 	}
