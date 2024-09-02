@@ -6,6 +6,7 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -102,6 +103,14 @@ public class LongRunningTask {
 					} else {
 						notification.setDuration(5000);
 					}
+
+					Button closeNotificaitonButton = new Button("");
+					closeNotificaitonButton.setIcon(VaadinIcon.CLOSE.create());
+					closeNotificaitonButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+					closeNotificaitonButton.addClickListener(e -> {
+						notification.close();
+					});
+					buttonLayout.add(closeNotificaitonButton);
 					notification.add(new Text(successMessage != null ? successMessage : "Task has been completed successfully!"), buttonLayout);
 					ui.push();
 				});
