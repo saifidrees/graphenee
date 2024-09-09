@@ -1262,7 +1262,7 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 	}
 
 	protected boolean shouldShowFormInDialog() {
-		return true;
+		return false;
 	}
 
 	protected String drawerWidth() {
