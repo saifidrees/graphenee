@@ -106,9 +106,10 @@ public class ResourcePreviewPanel extends VerticalLayout {
 		dialog.setHeight(height);
 		dialog.setResizable(true);
 		dialog.setModal(true);
-		dialog.setCloseOnEsc(true);
+		dialog.setCloseOnEsc(false);
 		dialog.setDraggable(true);
 		dialog.setResizable(true);
+		dialog.setCloseOnOutsideClick(false);
 		dialog.open();
 		return dialog;
 	}

@@ -18,6 +18,7 @@ public class GxMenuItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String label;
+	private Boolean isVisible = true;
 
 	private Component icon;
 	private String route;
