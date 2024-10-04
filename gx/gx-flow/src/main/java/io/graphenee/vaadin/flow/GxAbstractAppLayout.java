@@ -165,6 +165,7 @@ public abstract class GxAbstractAppLayout extends AppLayout implements RouterLay
 		flowSetup().menuItems().forEach(mi -> {
 			if (canDoAction(user, "view", mi) || mi.hasChildren()) {
 				SideNavItem i = new SideNavItem(mi.getLabel());
+				i.setVisible(mi.getIsVisible());
 				i.addClassName("gx-nav-menuitem");
 				i.addClassName("gx-nav-menuitem-root");
 				i.setPrefixComponent(mi.getIcon());
@@ -189,7 +190,7 @@ public abstract class GxAbstractAppLayout extends AppLayout implements RouterLay
 		pmi.getChildren().forEach(mi -> {
 			if (canDoAction(user, "view", mi) || mi.hasChildren()) {
 				SideNavItem i = new SideNavItem(mi.getLabel());
-				i.setVisible(pmi.getIsVisible());
+				i.setVisible(mi.getIsVisible());
 				i.addClassName("gx-nav-menuitem");
 				i.setPrefixComponent(mi.getIcon());
 				if (mi.getRoute() != null) {

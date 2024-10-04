@@ -114,4 +114,9 @@ public class GxMenuItem implements Serializable {
 		return null;
 	}
 
+	public GxMenuItem withVisibility(boolean isVisible) {
+		this.isVisible = isVisible;
+		return this;
+	}
+
 }
