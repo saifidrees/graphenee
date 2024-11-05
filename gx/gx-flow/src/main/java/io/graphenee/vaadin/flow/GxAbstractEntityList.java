@@ -128,8 +128,8 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 	@Autowired
 	GxEventBus eventBus1;
 
-	//	@Autowired
-	//	GxPreferenceManager prefMan;
+	// @Autowired
+	// GxPreferenceManager prefMan;
 
 	private Grid<T> dataGrid;
 	private Class<T> entityClass;
@@ -409,7 +409,7 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 			List<Column<T>> columns = new ArrayList<>();
 			List<String> userPreferences = new ArrayList<>();
 			if (availableProperties() != null && availableProperties().length > 0) {
-				//				PropertySet<T> propertySet = BeanPropertySet.get(entityClass);
+				// PropertySet<T> propertySet = BeanPropertySet.get(entityClass);
 				editColumn = dataGrid.addComponentColumn(source -> {
 					Button rowEditButton = new Button(VaadinIcon.EDIT.create());
 					rowEditButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY_INLINE);
@@ -433,7 +433,8 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 					Column<T> column = dataGrid.getColumnByKey(propertyName);
 					PropertyDefinition<T, Object> propertyDefinition;
 					try {
-						//						propertyDefinition = (PropertyDefinition<T, Object>) propertySet.getProperty(propertyName).get();
+						// propertyDefinition = (PropertyDefinition<T, Object>)
+						// propertySet.getProperty(propertyName).get();
 						propertyDefinition = (PropertyDefinition<T, Object>) bps.getProperty(propertyName).get();
 						Renderer<T> renderer = defaultRendererForProperty(propertyName, propertyDefinition);
 
@@ -689,9 +690,9 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 			if (propertyName != null) {
 				// AbstractField<?, ?> editorComponent = editorComponentMap.get(propertyName);
 				dataGrid.getEditor().editItem(icl.getItem());
-				//				if (editorComponent instanceof Focusable) {
-				//					((Focusable<?>) editorComponent).focus();
-				//				}
+				// if (editorComponent instanceof Focusable) {
+				// ((Focusable<?>) editorComponent).focus();
+				// }
 			}
 		}
 	}
@@ -822,7 +823,8 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 	protected Grid<T> dataGrid(Class<T> entityClass) {
 		Grid<T> dataGrid = new Grid<>(entityClass, true);
 		if (isGridInlineEditingEnabled()) {
-			//			PropertySet<T> bps = BeanPropertySet.get(entityClass, true, new PropertyFilterDefinition(1, Arrays.asList("java")));
+			// PropertySet<T> bps = BeanPropertySet.get(entityClass, true, new
+			// PropertyFilterDefinition(1, Arrays.asList("java")));
 			Binder<T> editBinder = Binder.withPropertySet(bps);
 			dataGrid.getEditor().setBinder(editBinder);
 			dataGrid.getEditor().setBuffered(false);
@@ -1078,12 +1080,16 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 		}
 		filter.getElement().getStyle().set("width", "100%");
 		filter.getElement().setProperty("clearButtonVisible", true);
-		// filter.getElement().setProperty("placeholder", propertyDefinition.getCaption() == null ? "" : propertyDefinition.getCaption());
+		// filter.getElement().setProperty("placeholder",
+		// propertyDefinition.getCaption() == null ? "" :
+		// propertyDefinition.getCaption());
 		return columnFilterForProperty(propertyName, propertyDefinition, filter);
 	}
 
 	/**
-	 * @deprecated use {@link #columnFilterForProperty(String, PropertyDefinition, AbstractField)} instead.
+	 * @deprecated use
+	 *             {@link #columnFilterForProperty(String, PropertyDefinition, AbstractField)}
+	 *             instead.
 	 */
 	@Deprecated
 	protected AbstractField<?, ?> columnFilterForProperty(String propertyName, PropertyDefinition<T, Object> propertyDefinition) {
@@ -1126,17 +1132,18 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 				renderer = new GxDateRenderer<>((ValueProvider<T, Date>) propertyDefinition.getGetter(), GxDateRenderer.GxDateResolution.DateTime);
 			}
 			if (renderer == null && (propertyDefinition.getType().equals(List.class) || propertyDefinition.getType().equals(Set.class))) {
-				//				renderer = new ComponentRenderer<>(s -> {					
-				//					MultiComboBox<Object> c = new MultiComboBox<>();
-				//					c.setItems(propertyDefinition.getGetter().apply((T) s));
-				//					Collection<Object> bag = (Collection<Object>) propertyDefinition.getGetter().apply((T) s);
-				//					Set<Object> value = new HashSet<>(bag);
-				//					c.setItems(value);
-				//					c.setValue(value);
-				//					c.setWidthFull();
-				//					c.setReadOnly(true);
-				//					return c;
-				//				});
+				// renderer = new ComponentRenderer<>(s -> {
+				// MultiComboBox<Object> c = new MultiComboBox<>();
+				// c.setItems(propertyDefinition.getGetter().apply((T) s));
+				// Collection<Object> bag = (Collection<Object>)
+				// propertyDefinition.getGetter().apply((T) s);
+				// Set<Object> value = new HashSet<>(bag);
+				// c.setItems(value);
+				// c.setValue(value);
+				// c.setWidthFull();
+				// c.setReadOnly(true);
+				// return c;
+				// });
 
 				renderer = new TextRenderer<>();
 			}
@@ -1242,7 +1249,8 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 	private void openForm(T entity) {
 		/**
 		 * 1. allow user to make changes to the entity using preEdit
-		 * 2. check if grid editing is enabled if yes, then don't show form or edit panel
+		 * 2. check if grid editing is enabled if yes, then don't show form or edit
+		 * panel
 		 * 3. if yes, then check if user has opted to show form in edit panel?
 		 * 4. if yes, then show form in edit panel
 		 * 5. else show form in dialog
@@ -1454,7 +1462,7 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 		layout.setFlexDirection(FlexDirection.COLUMN);
 		layout.setFlexWrap(FlexWrap.NOWRAP);
 		layout.add(GxAbstractEntityList.this, dlgFooter);
-		//layout.setFlexGrow(2, GxAbstractEntityList.this);
+		// layout.setFlexGrow(2, GxAbstractEntityList.this);
 		GxDialog dlg = new GxDialog(layout);
 		dlg.addThemeVariants(DialogVariant.NO_PADDING);
 		dlg.setId("dlg" + UUID.randomUUID().toString().replace("-", ""));
@@ -1463,7 +1471,7 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 		dlg.setDraggable(true);
 		dlg.setResizable(true);
 		dlg.open();
-		//		dlgDismissButton.addClickShortcut(Key.ESCAPE);
+		// dlgDismissButton.addClickShortcut(Key.ESCAPE);
 
 		dlgDismissButton.addClickListener(new TRDelayClickListener<Button>() {
 

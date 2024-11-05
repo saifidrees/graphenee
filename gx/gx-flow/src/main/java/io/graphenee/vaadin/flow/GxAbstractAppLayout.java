@@ -25,7 +25,6 @@ import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.server.VaadinSession;
 
 import io.graphenee.common.GxAuthenticatedUser;
@@ -34,8 +33,8 @@ import lombok.Setter;
 
 @Push
 @Viewport("width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes")
-@CssImport("./styles/graphenee.css")
-public abstract class GxAbstractAppLayout extends AppLayout implements RouterLayout, AppShellConfigurator {
+@CssImport(value = "./styles/graphenee.css")
+public abstract class GxAbstractAppLayout extends AppLayout implements AppShellConfigurator {
 
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +51,7 @@ public abstract class GxAbstractAppLayout extends AppLayout implements RouterLay
 		title.addClassName("gx-app-layout-title");
 		title.getStyle().set("font-size", "var(--lumo-font-size-xl)").set("margin", "0");
 		title.getStyle().set("color", "var(--lumo-base-color)");
-		//title.setWidthFull();
+		// title.setWidthFull();
 
 		H5 version = new H5(flowSetup().appVersion());
 		version.addClassName("gx-app-layout-version");
@@ -108,8 +107,9 @@ public abstract class GxAbstractAppLayout extends AppLayout implements RouterLay
 			logout.getStyle().set("color", "var(--lumo-base-color)");
 			logout.addThemeVariants(ButtonVariant.LUMO_ICON);
 			logout.addClickListener(cl -> {
+				VaadinSession.getCurrent().getSession().invalidate();
+				VaadinSession.getCurrent().close();
 				getUI().ifPresent(ui -> {
-					VaadinSession.getCurrent().setAttribute(GxAuthenticatedUser.class, null);
 					if (delegate != null) {
 						delegate.onLogout(ui);
 					} else {
