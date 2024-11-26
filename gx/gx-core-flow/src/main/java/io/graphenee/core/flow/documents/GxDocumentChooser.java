@@ -63,6 +63,7 @@ public class GxDocumentChooser extends CustomField<GxDocument> {
 					StreamResource sr = new StreamResource(s.getName(), () -> new ByteArrayInputStream(bytes));
 					sr.setContentType(mimeType);
 					image = new Image(sr, s.getName());
+					customizeImage(image);
 				} catch (Exception e) {
 					image = IconUtils.fileExtensionIconResource("image");
 				}
@@ -80,6 +81,9 @@ public class GxDocumentChooser extends CustomField<GxDocument> {
 		fl.add(image, label);
 		fl.setWidth("4rem");
 		return fl;
+	}
+
+	protected void customizeImage(Image image) {
 	}
 
 	public GxDocumentChooser(GxDocumentFilter filter) {

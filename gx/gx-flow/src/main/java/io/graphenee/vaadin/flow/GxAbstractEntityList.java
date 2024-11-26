@@ -340,7 +340,7 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 			});
 
 			importDataMenuItem = columnMenuBar.addItem(VaadinIcon.UPLOAD.create());
-			importDataMenuItem.setVisible(shouldShowExportDataMenu());
+			importDataMenuItem.setVisible(shouldShowImportDataMenu());
 			importDataMenuItem.addClickListener(new TRDelayEventListener<ClickEvent<MenuItem>>() {
 
 				private static final long serialVersionUID = 1L;
@@ -668,6 +668,10 @@ public abstract class GxAbstractEntityList<T> extends FlexLayout implements Impo
 	}
 
 	protected boolean shouldShowExportDataMenu() {
+		return true;
+	}
+
+	protected boolean shouldShowImportDataMenu() {
 		return true;
 	}
 
